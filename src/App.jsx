@@ -187,8 +187,7 @@ function App() {
 
             <img
               src={
-                selectedMovie.Poster &&
-                selectedMovie.Poster !== "N/A"
+                selectedMovie.Poster && selectedMovie.Poster !== "N/A"
                   ? selectedMovie.Poster
                   : "https://via.placeholder.com/200x300"
               }
@@ -203,9 +202,7 @@ function App() {
 
             <p>⭐ {selectedMovie.imdbRating || "N/A"}</p>
 
-            <button onClick={() => setSelectedMovie(null)}>
-              Close
-            </button>
+            <button onClick={() => setSelectedMovie(null)}>Close</button>
           </div>
         </div>
       )}
