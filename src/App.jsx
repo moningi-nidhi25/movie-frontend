@@ -45,16 +45,25 @@ function App() {
 
   // 🎬 Get movie details
   const getMovieDetails = async (id) => {
-    try {
-      const res = await fetch(
-        `https://movie-backend-xew0.onrender.com/movie/${id}`
-      );
-      const data = await res.json();
-      setSelectedMovie(data);
-    } catch (err) {
-      console.error("Error fetching details:", err);
-    }
-  };
+  try {
+    const res = await fetch(
+      `https://movie-backend-xew0.onrender.com/movie/${id}`
+    );
+    const data = await res.json();
+
+    setSelectedMovie(data);
+
+    // 👇 ADD THIS
+    setTimeout(() => {
+      document.getElementById("details")?.scrollIntoView({
+        behavior: "smooth",
+      });
+    }, 100);
+
+  } catch (err) {
+    console.error(err);
+  }
+};
 
   // ❤️ Add to favorites
   const toggleFavorite = (movie) => {
@@ -70,7 +79,7 @@ function App() {
   return (
     <div className="container">
       <h1>🎬 Movie Search App</h1>
-      <div style={{ marginBottom: "15px" }}>
+      <div id="details" style={{ marginBottom: "15px" }}>
         <button onClick={() => setShowFavorites(false)}>🔍 Search</button>
         <button onClick={() => setShowFavorites(true)} style={{ marginLeft: "10px" }}>
           ❤️ Favorites
@@ -133,20 +142,39 @@ function App() {
         ))}
       </div>
 
-      {/* 🔍 Movie Details (SAFE rendering) */}
       {selectedMovie && (
-        <div style={{ marginTop: "30px" }}>
+      <div
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          background: "rgba(0,0,0,0.8)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        onClick={() => setSelectedMovie(null)}
+      >
+        <div
+          style={{
+            background: "#1e293b",
+            padding: "20px",
+            borderRadius: "10px",
+            maxWidth: "400px",
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
           <h2>{selectedMovie.Title}</h2>
-
-          {selectedMovie.Poster && (
-            <img src={selectedMovie.Poster} width="200" />
-          )}
-
+          <img src={selectedMovie.Poster} width="200" />
           <p>{selectedMovie.Plot}</p>
           <p>⭐ {selectedMovie.imdbRating}</p>
+
+          <button onClick={() => setSelectedMovie(null)}>Close</button>
         </div>
-      )}
-    </div>
+      </div>
+    )}
   );
 }
 
