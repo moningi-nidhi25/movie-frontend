@@ -199,7 +199,10 @@ function App() {
                 ? selectedMovie.Plot
                 : "No description available"}
             </p>
-
+            <p><b>🎭 Genre:</b> {selectedMovie.Genre}</p>
+            <p><b>🎬 Director:</b> {selectedMovie.Director}</p>
+            <p><b>👨‍🎤 Actors:</b> {selectedMovie.Actors}</p>
+            <p><b>⏱ Runtime:</b> {selectedMovie.Runtime}</p>
             <p>⭐ {selectedMovie.imdbRating || "N/A"}</p>
 
             <button onClick={() => setSelectedMovie(null)}>Close</button>
