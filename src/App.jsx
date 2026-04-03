@@ -9,7 +9,7 @@ function App() {
   const [favorites, setFavorites] = useState([]);
   const [showFavorites, setShowFavorites] = useState(false);
 
-  // 🔹 Load favorites from localStorage
+  // 🔹 Load favorites
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("fav")) || [];
     setFavorites(saved);
@@ -19,7 +19,7 @@ function App() {
   useEffect(() => {
     localStorage.setItem("fav", JSON.stringify(favorites));
   }, [favorites]);
-  
+
   // 🔍 Search movies
   const searchMovies = async () => {
     if (!query) return;
@@ -45,29 +45,27 @@ function App() {
 
   // 🎬 Get movie details
   const getMovieDetails = async (id) => {
-  try {
-    const res = await fetch(
-      `https://movie-backend-xew0.onrender.com/movie/${id}`
-    );
-    const data = await res.json();
+    try {
+      const res = await fetch(
+        `https://movie-backend-xew0.onrender.com/movie/${id}`
+      );
+      const data = await res.json();
 
-    setSelectedMovie(data);
+      console.log(data); // debug
 
-    // 👇 ADD THIS
-    setTimeout(() => {
-      document.getElementById("details")?.scrollIntoView({
-        behavior: "smooth",
-      });
-    }, 100);
+      if (data && data.Response !== "False") {
+        setSelectedMovie(data);
+      } else {
+        alert("Movie details not found");
+      }
+    } catch (err) {
+      console.error("Error fetching details:", err);
+    }
+  };
 
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-  // ❤️ Add to favorites
+  // ❤️ Toggle favorite
   const toggleFavorite = (movie) => {
-  const exists = favorites.find((m) => m.imdbID === movie.imdbID);
+    const exists = favorites.find((m) => m.imdbID === movie.imdbID);
 
     if (exists) {
       setFavorites(favorites.filter((m) => m.imdbID !== movie.imdbID));
@@ -79,27 +77,39 @@ function App() {
   return (
     <div className="container">
       <h1>🎬 Movie Search App</h1>
-      <div id="details" style={{ marginBottom: "15px" }}>
+
+      {/* 🔀 Navigation */}
+      <div style={{ marginBottom: "15px" }}>
         <button onClick={() => setShowFavorites(false)}>🔍 Search</button>
-        <button onClick={() => setShowFavorites(true)} style={{ marginLeft: "10px" }}>
+        <button
+          onClick={() => setShowFavorites(true)}
+          style={{ marginLeft: "10px" }}
+        >
           ❤️ Favorites
         </button>
       </div>
-      {/* 🔍 Search */}
-      <input
-        type="text"
-        placeholder="Search movies..."
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-      />
 
-      <button onClick={searchMovies}>Search</button>
+      {/* 🔍 Search */}
+      {!showFavorites && (
+        <>
+          <input
+            type="text"
+            placeholder="Search movies..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+
+          <button onClick={searchMovies}>Search</button>
+        </>
+      )}
 
       {/* ⚡ Loading */}
       {loading && <p>Loading...</p>}
 
       {/* ❌ No results */}
-      {!loading && movies.length === 0 && <p>No movies found</p>}
+      {!loading && !showFavorites && movies.length === 0 && (
+        <p>No movies found</p>
+      )}
 
       {/* 🎬 Movie Grid */}
       <div className="grid">
@@ -111,7 +121,7 @@ function App() {
           >
             <img
               src={
-                movie.Poster !== "N/A"
+                movie.Poster && movie.Poster !== "N/A"
                   ? movie.Poster
                   : "https://via.placeholder.com/200x300"
               }
@@ -127,7 +137,9 @@ function App() {
                 toggleFavorite(movie);
               }}
               style={{
-                background: favorites.find((m) => m.imdbID === movie.imdbID)
+                background: favorites.find(
+                  (m) => m.imdbID === movie.imdbID
+                )
                   ? "red"
                   : "#444",
                 color: "white",
@@ -142,39 +154,62 @@ function App() {
         ))}
       </div>
 
+      {/* 🎬 MODAL (Movie Details) */}
       {selectedMovie && (
-      <div
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
-          background: "rgba(0,0,0,0.8)",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-        onClick={() => setSelectedMovie(null)}
-      >
         <div
           style={{
-            background: "#1e293b",
-            padding: "20px",
-            borderRadius: "10px",
-            maxWidth: "400px",
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            background: "rgba(0,0,0,0.8)",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            zIndex: 1000,
           }}
-          onClick={(e) => e.stopPropagation()}
+          onClick={() => setSelectedMovie(null)}
         >
-          <h2>{selectedMovie.Title}</h2>
-          <img src={selectedMovie.Poster} width="200" />
-          <p>{selectedMovie.Plot}</p>
-          <p>⭐ {selectedMovie.imdbRating}</p>
+          <div
+            style={{
+              background: "#1e293b",
+              padding: "20px",
+              borderRadius: "10px",
+              maxWidth: "400px",
+              textAlign: "center",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2>
+              {selectedMovie.Title} ({selectedMovie.Year})
+            </h2>
 
-          <button onClick={() => setSelectedMovie(null)}>Close</button>
+            <img
+              src={
+                selectedMovie.Poster &&
+                selectedMovie.Poster !== "N/A"
+                  ? selectedMovie.Poster
+                  : "https://via.placeholder.com/200x300"
+              }
+              width="200"
+            />
+
+            <p>
+              {selectedMovie.Plot && selectedMovie.Plot !== "N/A"
+                ? selectedMovie.Plot
+                : "No description available"}
+            </p>
+
+            <p>⭐ {selectedMovie.imdbRating || "N/A"}</p>
+
+            <button onClick={() => setSelectedMovie(null)}>
+              Close
+            </button>
+          </div>
         </div>
-      </div>
-    )}
+      )}
+    </div>
   );
 }
 
