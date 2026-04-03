@@ -57,8 +57,12 @@ function App() {
   };
 
   // ❤️ Add to favorites
-  const addFavorite = (movie) => {
-    if (!favorites.find((m) => m.imdbID === movie.imdbID)) {
+  const toggleFavorite = (movie) => {
+  const exists = favorites.find((m) => m.imdbID === movie.imdbID);
+
+    if (exists) {
+      setFavorites(favorites.filter((m) => m.imdbID !== movie.imdbID));
+    } else {
       setFavorites([...favorites, movie]);
     }
   };
@@ -106,10 +110,17 @@ function App() {
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                addFavorite(movie);
+                toggleFavorite(movie);
+              }}
+              style={{
+                background: favorites.find((m) => m.imdbID === movie.imdbID)
+                  ? "red"
+                  : "#444",
+                color: "white",
+                marginTop: "5px",
               }}
             >
-              ❤️
+              {favorites.find((m) => m.imdbID === movie.imdbID) ? "❤️ Added" : "🤍 Add"}
             </button>
           </div>
         ))}
