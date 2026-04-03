@@ -1,16 +1,131 @@
-# React + Vite
+# 🎬 Movie Search App (Frontend)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern movie search web application built using React and Vite, powered by a FastAPI backend.  
+Users can search for movies, view detailed information, and manage a personalized favorites list.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Features
 
-## React Compiler
+- 🔍 Search movies by name
+- 🎬 View detailed movie information in a popup modal
+- ❤️ Add and remove movies from favorites
+- 💾 Favorites stored using localStorage
+- 🔄 Toggle between search results and favorites
+- ⚡ Fast and responsive UI built with Vite
+- 🌐 Deployed on Vercel
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 🛠 Tech Stack
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- React (Vite)
+- JavaScript (ES6+)
+- CSS
+- FastAPI (Backend)
+- OMDb API
+
+---
+
+## 📦 Application Overview
+
+The application interacts with a backend API to provide movie data.
+
+### 🔹 Movie Search
+Users can search for movies using a keyword. The app fetches matching results and displays them in a grid layout.
+
+### 🔹 Movie Details
+Clicking on a movie opens a modal displaying detailed information such as title, year, plot, and rating.
+
+### 🔹 Favorites
+Users can add or remove movies from a favorites list. Favorites are stored locally in the browser and persist across sessions.
+
+---
+
+## ⚙️ Local Setup Guide
+
+Follow these steps to run the frontend locally:
+
+### 1️⃣ Clone the Repository
+
+```bash
+git clone https://github.com/moningi-nidhi25/movie-frontend.git
+cd movie-frontend
+````
+
+---
+
+### 2️⃣ Install Dependencies
+
+```bash
+npm install
+```
+
+---
+
+### 3️⃣ Configure Backend API URL
+
+Update the API base URL inside:
+
+```
+src/App.jsx
+```
+
+Replace with your backend URL:
+
+```js
+https://movie-backend-xew0.onrender.com
+```
+
+---
+
+### 4️⃣ Run the Development Server
+
+```bash
+npm run dev
+```
+
+---
+
+### 5️⃣ Open in Browser
+
+```
+http://localhost:5173
+```
+
+---
+
+## 🌐 Live Application
+
+👉 [https://your-frontend-url.vercel.app](https://your-frontend-url.vercel.app)
+
+---
+
+## 🔗 Backend Integration
+
+This frontend connects to the backend API:
+
+👉 [https://movie-backend-xew0.onrender.com](https://movie-backend-xew0.onrender.com)
+
+Ensure the backend is running or deployed before using the application.
+
+---
+
+## ⚠️ Notes
+
+* ⏳ Initial search may be slow due to backend cold start (Render free tier)
+* 🌐 Requires internet connection for API requests
+* 💾 Favorites are stored locally (browser-based)
+
+---
+
+## 💡 Future Enhancements
+
+* 🎨 Netflix-style UI redesign
+* 🔍 Live search (search-as-you-type)
+* 🎬 Movie recommendations
+* 👤 User authentication
+* ☁️ Cloud-based favorites storage
+
+---
+
