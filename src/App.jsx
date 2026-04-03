@@ -5,9 +5,9 @@ function App() {
   const [query, setQuery] = useState("");
   const [movies, setMovies] = useState([]);
   const [loading, setLoading] = useState(false);
-
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [favorites, setFavorites] = useState([]);
+  const [showFavorites, setShowFavorites] = useState(false);
 
   // 🔹 Load favorites from localStorage
   useEffect(() => {
@@ -19,7 +19,7 @@ function App() {
   useEffect(() => {
     localStorage.setItem("fav", JSON.stringify(favorites));
   }, [favorites]);
-
+  
   // 🔍 Search movies
   const searchMovies = async () => {
     if (!query) return;
@@ -70,7 +70,12 @@ function App() {
   return (
     <div className="container">
       <h1>🎬 Movie Search App</h1>
-
+      <div style={{ marginBottom: "15px" }}>
+        <button onClick={() => setShowFavorites(false)}>🔍 Search</button>
+        <button onClick={() => setShowFavorites(true)} style={{ marginLeft: "10px" }}>
+          ❤️ Favorites
+        </button>
+      </div>
       {/* 🔍 Search */}
       <input
         type="text"
@@ -89,7 +94,7 @@ function App() {
 
       {/* 🎬 Movie Grid */}
       <div className="grid">
-        {movies.map((movie) => (
+        {(showFavorites ? favorites : movies).map((movie) => (
           <div
             key={movie.imdbID}
             className="card"
@@ -99,7 +104,7 @@ function App() {
               src={
                 movie.Poster !== "N/A"
                   ? movie.Poster
-                  : "https://via.placeholder.com/200x300?text=No+Image"
+                  : "https://via.placeholder.com/200x300"
               }
               alt={movie.Title}
             />
@@ -120,7 +125,9 @@ function App() {
                 marginTop: "5px",
               }}
             >
-              {favorites.find((m) => m.imdbID === movie.imdbID) ? "❤️ Added" : "🤍 Add"}
+              {favorites.find((m) => m.imdbID === movie.imdbID)
+                ? "❤️ Added"
+                : "🤍 Add"}
             </button>
           </div>
         ))}
@@ -139,17 +146,6 @@ function App() {
           <p>⭐ {selectedMovie.imdbRating}</p>
         </div>
       )}
-
-      {/* ❤️ Favorites */}
-      <h2 style={{ marginTop: "40px" }}>❤️ Favorites</h2>
-      <div className="grid">
-        {favorites.map((movie) => (
-          <div key={movie.imdbID} className="card">
-            <img src={movie.Poster} alt={movie.Title} />
-            <p>{movie.Title}</p>
-          </div>
-        ))}
-      </div>
     </div>
   );
 }
